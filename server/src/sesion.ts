@@ -17,8 +17,11 @@ export interface CargaSesion {
 function secreto(): string {
   const valor = process.env.SESSION_SECRET;
   if (!valor) {
-    // En desarrollo local sin .env esto evita que el arranque falle; en
-    // produccion (Render) SESSION_SECRET siempre viene definido por render.yaml.
+    // En desarrollo local sin .env esto evita que el arranque falle. En produccion no:
+    // esta clave esta en el repositorio publico y cualquiera podria falsificar sesiones.
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Falta SESSION_SECRET en producción");
+    }
     return "secreto-de-desarrollo-no-usar-en-produccion";
   }
   return valor;
