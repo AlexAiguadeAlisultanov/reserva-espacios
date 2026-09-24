@@ -1,0 +1,21 @@
+{
+  "name": "reserva-espacios",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Reserva de salas y puestos de trabajo para una oficina hibrida.",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w web && node scripts/copiar-web.mjs && npm run build -w server",
+    "start": "npm run start -w server",
+    "test": "npm run test -w server",
+    "comprobar": "npm run comprobar -w server && npm run comprobar -w web",
+    "db:sembrar": "npm run db:sembrar -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
