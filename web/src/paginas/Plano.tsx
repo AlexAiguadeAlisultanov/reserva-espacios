@@ -6,7 +6,10 @@ import { opcionesHora } from "../utilidades/franjas.js";
 import { aInstanteMadrid, fechaLocalMadrid, sumarMinutosAHora } from "../utilidades/tiempo.js";
 import type { Espacio, EspacioConEstado } from "../tipos.js";
 
-const VIEWBOX = "0 0 900 600";
+// Recorta el viewBox a los limites reales de las formas (ver datosEjemplo.ts:
+// salas y puestos van de x=40 a x=820, y=40 a y=572), con 20px de aire alrededor,
+// en vez de arrastrar el margen muerto de un lienzo generico de 900x600.
+const VIEWBOX = "20 20 820 572";
 const DURACIONES = [30, 60, 90, 120];
 
 export function Plano() {
@@ -94,33 +97,35 @@ export function Plano() {
           {espacios.length === 0 && !cargando ? (
             <p className="estado-vacio">{t("plano.sinEspacios")}</p>
           ) : (
-            <svg className="plano-svg" viewBox={VIEWBOX} role="img" aria-label={t(`planta.${planta}`)}>
-              {[...salas, ...puestos].map((espacio) => (
-                <g
-                  key={espacio.id}
-                  className="plano-espacio"
-                  data-estado={espacio.estado}
-                  data-interactivo={espacio.estado === "libre"}
-                  transform={`translate(${espacio.posX}, ${espacio.posY})`}
-                  onClick={() => espacio.estado === "libre" && setSeleccionado(espacio)}
-                >
-                  <title>
-                    {espacio.estado === "ocupado" && espacio.ocupadoPor
-                      ? t("plano.ocupadoPor", { nombre: espacio.ocupadoPor, hora: espacio.ocupadoHasta ?? "" })
-                      : espacio.nombre}
-                  </title>
-                  <rect className="plano-espacio__forma" width={espacio.ancho} height={espacio.alto} rx={espacio.tipo === "sala" ? 12 : 8} />
-                  <text className="plano-espacio__texto" x={8} y={espacio.tipo === "sala" ? 20 : 18}>
-                    {espacio.nombre}
-                  </text>
-                  {espacio.tipo === "sala" && (
-                    <text className="plano-espacio__subtexto" x={8} y={36}>
-                      {t("plano.capacidad", { n: espacio.capacidad })}
+            <div className="plano-scroll">
+              <svg className="plano-svg" viewBox={VIEWBOX} role="img" aria-label={t(`planta.${planta}`)}>
+                {[...salas, ...puestos].map((espacio) => (
+                  <g
+                    key={espacio.id}
+                    className="plano-espacio"
+                    data-estado={espacio.estado}
+                    data-interactivo={espacio.estado === "libre"}
+                    transform={`translate(${espacio.posX}, ${espacio.posY})`}
+                    onClick={() => espacio.estado === "libre" && setSeleccionado(espacio)}
+                  >
+                    <title>
+                      {espacio.estado === "ocupado" && espacio.ocupadoPor
+                        ? t("plano.ocupadoPor", { nombre: espacio.ocupadoPor, hora: espacio.ocupadoHasta ?? "" })
+                        : espacio.nombre}
+                    </title>
+                    <rect className="plano-espacio__forma" width={espacio.ancho} height={espacio.alto} rx={espacio.tipo === "sala" ? 12 : 8} />
+                    <text className="plano-espacio__texto" x={8} y={espacio.tipo === "sala" ? 20 : 18}>
+                      {espacio.nombre}
                     </text>
-                  )}
-                </g>
-              ))}
-            </svg>
+                    {espacio.tipo === "sala" && (
+                      <text className="plano-espacio__subtexto" x={8} y={36}>
+                        {t("plano.capacidad", { n: espacio.capacidad })}
+                      </text>
+                    )}
+                  </g>
+                ))}
+              </svg>
+            </div>
           )}
           <div className="plano-leyenda">
             <span className="plano-leyenda__item">

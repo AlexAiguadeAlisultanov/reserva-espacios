@@ -151,7 +151,7 @@ export function Busqueda() {
                         ))}
                       </div>
                     )}
-                    <button className="boton boton--primario" onClick={() => setSeleccionado(espacio)}>
+                    <button className="boton boton--primario-contorno" style={{ marginTop: "auto" }} onClick={() => setSeleccionado(espacio)}>
                       {t("reserva.confirmar")}
                     </button>
                   </div>

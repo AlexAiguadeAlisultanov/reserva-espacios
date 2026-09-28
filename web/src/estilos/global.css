@@ -294,6 +294,18 @@ a {
   background: var(--error-fondo);
 }
 
+.boton--primario-contorno {
+  background: transparent;
+  color: var(--acento);
+  border: 1px solid rgba(239, 122, 90, 0.4);
+}
+.boton--primario-contorno:hover:not(:disabled),
+.boton--primario-contorno:focus-visible {
+  background: var(--acento);
+  color: #1a0e09;
+  border-color: var(--acento);
+}
+
 .boton--ancho {
   width: 100%;
 }
@@ -329,6 +341,7 @@ select.entrada-texto {
   color: var(--texto);
   font-size: 0.9rem;
   width: 100%;
+  height: 44px;
 }
 
 .campo__control:focus,
@@ -425,10 +438,32 @@ select.entrada-texto {
   overflow: auto;
 }
 
+.plano-scroll {
+  position: relative;
+  overflow-x: auto;
+}
+
 .plano-svg {
   width: 100%;
+  min-width: 640px;
   height: auto;
   display: block;
+}
+
+/* Por debajo de este ancho el plano no cabe entero: un degradado en el borde
+   derecho avisa de que hay mas contenido con el que hacer scroll. Por encima,
+   el plano ya cabe sin recortarse y el degradado no se pinta. */
+@media (max-width: 680px) {
+  .plano-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 32px;
+    background: linear-gradient(to right, transparent, var(--panel));
+    pointer-events: none;
+  }
 }
 
 .plano-espacio {
@@ -679,7 +714,7 @@ select.entrada-texto {
 .barra-progreso {
   height: 6px;
   border-radius: 999px;
-  background: var(--panel-2);
+  background: var(--borde-fuerte);
   overflow: hidden;
 }
 .barra-progreso__relleno {
